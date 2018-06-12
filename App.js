@@ -1,14 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
+import { LinearGradient } from 'expo';
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
+      
+       
+        
+        <ImageBackground style = {{width:'100%', height: '100%'}}  source = {require('./assets/images/backgroundLogin2.jpg')}>
+          
+          <Text style = {{color:'red'}}>Hello world</Text>
+        </ImageBackground> 
+        
+      
     );
   }
 }
@@ -19,5 +23,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+   
   },
 });
