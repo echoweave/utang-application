@@ -6,10 +6,19 @@ import { StyleSheet,
          ImageBackground,
          Alert} from 'react-native';
 import { LinearGradient } from 'expo';
+import {
+  createStackNavigator ,
+} from 'react-navigation';
 import globals from './assets/css/global';
 import TextField from './components/TextField';
 import AuthButton from './components/AuthButton';
-export default class App extends React.Component {
+import Register from './components/pages/Register';
+
+class App extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome',
+    header: null,
+  };
   constructor(props) {
     super(props);
     this.state = { username: '',
@@ -20,8 +29,9 @@ export default class App extends React.Component {
     Alert.alert('You tapped the button!');
   }
   render() {
+    const { navigate } = this.props.navigation;
     return (
-        <ImageBackground style = {styles.container}  source = {require('./assets/images/backgroundLogin2.jpg')}>
+        <ImageBackground style = {[globals.container, {padding:20}]}  source = {require('./assets/images/backgroundLogin2.jpg')}>
           <View style = {{flex:1, 
                           width:"100%",
                           alignItems: 'center',
@@ -36,13 +46,13 @@ export default class App extends React.Component {
                           alignItems: 'center',}}>
             <TextField
               text = {this.state.username}
-              placeholder = "Username or email"
+              placeholder = "Email"
               password = {false}
               styles = {{marginBottom:10}}
             />
             <TextField
               text = {this.state.password}
-              placeholder = "password"
+              placeholder = "Password"
               password = {true}
               styles = {{marginBottom:10}}
             />
@@ -61,7 +71,8 @@ export default class App extends React.Component {
                             paddingBottom:20}}>
               <Text style = {{
                     fontWeight:"bold",
-                    color:"white", }}>
+                    color:"white", }}
+                    onPress = {()=>navigate("Register")}>
                 Not a user? Sign up here
               </Text>
             </View>
@@ -72,18 +83,15 @@ export default class App extends React.Component {
     );
   }
 }
-
+export default createStackNavigator ({
+  Login: { screen: App },
+  Register: { screen: Register },
+});
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
-  },
   image: {
     flex: 1,
-   
   },
 });
+
+
+
