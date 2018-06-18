@@ -4,7 +4,10 @@ import { StyleSheet,
          View, 
          Image, 
          ImageBackground,
-         Alert} from 'react-native';
+         Alert,
+         BackHandler} from 'react-native';
+
+import * as firebase from 'firebase';
 import { LinearGradient } from 'expo';
 import {
   createStackNavigator ,
@@ -13,6 +16,15 @@ import globals from './assets/css/global';
 import TextField from './components/TextField';
 import AuthButton from './components/AuthButton';
 import Register from './components/pages/Register';
+import Home from './components/pages/Home';
+const firebaseConfig = {
+  apiKey: "AIzaSyCela0E46EsAdVz-CMj5heUdLseTLA1wp8",
+  authDomain: "utang-5fa48.firebaseapp.com",
+  databaseURL: "https://utang-5fa48.firebaseio.com/",
+  storageBucket: "gs://utang-5fa48.appspot.com"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 class App extends React.Component {
   static navigationOptions = {
@@ -21,12 +33,34 @@ class App extends React.Component {
   };
   constructor(props) {
     super(props);
-    this.state = { username: '',
+    this.state = { email: '',
                    password:'' };
+    this.props.navigation.navigate("Home");
   }
-  doSomething(){
-    console.log("Hello world");
-    Alert.alert('You tapped the button!');
+  login(){
+    //console.log("Hello");
+    var that  =  this;
+    console.log(this.state.email, this.state.password);
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    .then((user)=>{
+      that.props.navigation.navigate("Home");
+      //console.log("HelloEphraim");
+    }).catch((err)=>{
+      Alert.alert(err.message);
+      console.log(err);
+    });
+  }
+  listeningForAuthChange(){
+    var that = this;
+    firebase.auth.onAuthStateChanged((user)=>{
+      console.log('auth', user);
+      if(user){
+        this.setState({name: user.email});
+        that.props.navigation.navigate("Home");
+      }else{
+        that.props.navigation.navigate("Login");
+      }
+    });
   }
   render() {
     const { navigate } = this.props.navigation;
@@ -45,9 +79,10 @@ class App extends React.Component {
                           width:"100%",
                           alignItems: 'center',}}>
             <TextField
-              text = {this.state.username}
+              text = {this.state.email}
               placeholder = "Email"
               password = {false}
+              onChangeText = {(email)=>{this.setState({email})}}
               styles = {{marginBottom:10}}
             />
             <TextField
@@ -55,10 +90,11 @@ class App extends React.Component {
               placeholder = "Password"
               password = {true}
               styles = {{marginBottom:10}}
+              onChangeText = {(password)=>{this.setState({password})}}
             />
             <AuthButton
               text = "Login"
-              onPress = {() =>this.doSomething()}
+              onPress = {this.login.bind(this)}
               buttonStyle = {{marginBottom:10}}
             />
             <Text style = {{
@@ -86,6 +122,7 @@ class App extends React.Component {
 export default createStackNavigator ({
   Login: { screen: App },
   Register: { screen: Register },
+  Home: {screen: Home},
 });
 const styles = StyleSheet.create({
   image: {

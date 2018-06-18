@@ -15,8 +15,8 @@ export default class TextField extends React.Component {
         return (
             <TextInput
                 style={ [globals.textField, this.props.styles]}
-                value={this.state.text}
-                onChangeText = {(text) => this.changeText({text})}
+                value={this.props.text}
+                onChangeText = {this.props.onChangeText}
                 underlineColorAndroid = "transparent"
                 placeholder = {this.props.placeholder}
                 secureTextEntry = {this.props.password}
